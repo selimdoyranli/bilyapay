@@ -15,4 +15,12 @@
   --color-green-800: #016538;
   --color-green-900: #0A5331;
   --color-green-950: #052E16;
+
+  --ui-color-neutral-900: #121212;
+  --ui-primary: #167a3f;
+}
+
+
+.dark {
+  --ui-primary: #4dce74;
 }

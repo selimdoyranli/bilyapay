@@ -1,76 +1,140 @@
 <template>
   <div>
-    <UPageHero
-      title="Nuxt Starter Template"
-      description="A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours."
-      :links="[{
-        label: 'Get started',
-        to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
-        target: '_blank',
-        trailingIcon: 'i-lucide-arrow-right',
-        size: 'xl'
-      }, {
-        label: 'Use this template',
-        to: 'https://github.com/nuxt-ui-templates/starter',
-        target: '_blank',
-        icon: 'i-simple-icons-github',
-        size: 'xl',
-        color: 'neutral',
-        variant: 'subtle'
-      }]"
-    />
+    <UContainer>
+      <h1
+        class="font-bold text-3xl mb-2 block mt-12"
+      >
+        Bilyapay
+      </h1>
 
-    <UPageSection
-      id="features"
-      title="Everything you need to build modern Nuxt apps"
-      description="Start with a solid foundation. This template includes all the essentials for building production-ready applications with Nuxt UI's powerful component system."
-      :features="[{
-        icon: 'i-lucide-rocket',
-        title: 'Production-ready from day one',
-        description: 'Pre-configured with TypeScript, ESLint, Tailwind CSS, and all the best practices. Focus on building features, not setting up tooling.'
-      }, {
-        icon: 'i-lucide-palette',
-        title: 'Beautiful by default',
-        description: 'Leveraging Nuxt UI\'s design system with automatic dark mode, consistent spacing, and polished components that look great out of the box.'
-      }, {
-        icon: 'i-lucide-zap',
-        title: 'Lightning fast',
-        description: 'Optimized for performance with SSR/SSG support, automatic code splitting, and edge-ready deployment. Your users will love the speed.'
-      }, {
-        icon: 'i-lucide-blocks',
-        title: '100+ components included',
-        description: 'Access Nuxt UI\'s comprehensive component library. From forms to navigation, everything is accessible, responsive, and customizable.'
-      }, {
-        icon: 'i-lucide-code-2',
-        title: 'Developer experience first',
-        description: 'Auto-imports, hot module replacement, and TypeScript support. Write less boilerplate and ship more features.'
-      }, {
-        icon: 'i-lucide-shield-check',
-        title: 'Built for scale',
-        description: 'Enterprise-ready architecture with proper error handling, SEO optimization, and security best practices built-in.'
-      }]"
-    />
+      <h2
+        class="font-normal text-xl block mb-12"
+      >
+        Bilyoner verileri ile yapay zeka futbol maçı tahmini
+      </h2>
 
-    <UPageSection>
-      <UPageCTA
-        title="Ready to build your next Nuxt app?"
-        description="Join thousands of developers building with Nuxt and Nuxt UI. Get this template and start shipping today."
-        variant="subtle"
-        :links="[{
-          label: 'Start building',
-          to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
-          target: '_blank',
-          trailingIcon: 'i-lucide-arrow-right',
-          color: 'neutral'
-        }, {
-          label: 'View on GitHub',
-          to: 'https://github.com/nuxt-ui-templates/starter',
-          target: '_blank',
-          icon: 'i-simple-icons-github',
-          color: 'neutral',
-          variant: 'outline'
-        }]"
-      />
-    </UPageSection>
+      <FormPredictForm @on-submit="handlePredictFormSubmit" />
+
+      <UTabs
+        v-if="matchDetails"
+        class="mt-12"
+        :items="tabs"
+      >
+        <template #match-details="{ item }">
+          <MatchDetails :data="item.content" />
+        </template>
+        <template #match-statistics="{ item }">
+          <MatchStatistics :data="item.content" />
+        </template>
+        <template #missing-players="{ item }">
+          <MatchMissingPlayers :data="item.content" />
+        </template>
+        <template #match-comments="{ item }">
+          <MatchComments :data="item.content" />
+        </template>
+      </UTabs>
+    </UContainer>
   </div>
 </template>
+
+<script setup lang="ts">
+const { fetchMatchDetails, fetchMatchStatistics, fetchMissingPlayersOfMatch, fetchMatchComments } = useBilyonerApi()
+
+const state = reactive<{ matchId: number | null }>({
+  matchId: null
+})
+
+const tabs = ref([
+  {
+    label: 'Maç detayları',
+    icon: 'i-heroicons-information-circle',
+    content: 'Maç detayları' as any,
+    slot: 'match-details'
+  },
+  {
+    label: 'Maç istatistikleri',
+    icon: 'i-heroicons-chart-bar',
+    content: 'Maç istatistikleri' as any,
+    slot: 'match-statistics'
+  },
+  {
+    label: 'Eksik oyuncular',
+    icon: 'i-heroicons-user-minus',
+    content: 'Eksik oyuncular' as any,
+    slot: 'missing-players'
+  },
+  {
+    label: 'Maç yorumları',
+    icon: 'i-heroicons-chat-bubble-bottom-center-text',
+    content: 'Maç yorumları' as any,
+    slot: 'match-comments'
+  }
+])
+
+const { execute: executeMatchDetails, data: matchDetails } = await useAsyncData(
+  `matchDetails:${state.matchId}`,
+  () => state.matchId ? fetchMatchDetails(state.matchId) : Promise.resolve(null),
+  {
+    immediate: false,
+    watch: [() => state.matchId]
+  }
+)
+
+const { execute: executeMatchStatistics, data: matchStatistics } = await useAsyncData(
+  `matchStatistics:${state.matchId}`,
+  () => state.matchId ? fetchMatchStatistics(state.matchId) : Promise.resolve(null),
+  {
+    immediate: false,
+    watch: [() => state.matchId]
+  }
+)
+
+const { execute: executeMissingPlayersOfMatch, data: missingPlayersOfMatch } = await useAsyncData(
+  `missingPlayersOfMatch:${state.matchId}`,
+  () => state.matchId ? fetchMissingPlayersOfMatch(state.matchId) : Promise.resolve(null),
+  {
+    immediate: false,
+    watch: [() => state.matchId]
+  }
+)
+
+const { execute: executeMatchComments, data: matchComments } = await useAsyncData(
+  `matchComments:${state.matchId}`,
+  () => state.matchId ? fetchMatchComments(state.matchId) : Promise.resolve(null),
+  {
+    immediate: false,
+    watch: [() => state.matchId]
+  }
+)
+
+const handlePredictFormSubmit = async (bilyonerMatchLink: string) => {
+  const matchId = Number(bilyonerMatchLink.split('/')[5])
+  state.matchId = matchId
+
+  // Refresh data since watch option handles reactivity, but we want to ensure fetch
+  await Promise.all([
+    executeMatchDetails(),
+    executeMatchStatistics(),
+    executeMissingPlayersOfMatch(),
+    executeMatchComments()
+  ])
+
+  if (matchDetails.value && matchStatistics.value) {
+    const stats = matchStatistics.value as any
+    const homeTeamName = stats.oddStatistics?.generalStats?.homeTeamName
+    const awayTeamName = stats.oddStatistics?.generalStats?.awayTeamName
+
+    if (homeTeamName) {
+      ;(matchDetails.value as any).homeTeamName = homeTeamName
+    }
+    if (awayTeamName) {
+      ;(matchDetails.value as any).awayTeamName = awayTeamName
+    }
+  }
+
+  if (matchDetails.value && tabs.value[0]) tabs.value[0].content = matchDetails.value
+  if (matchStatistics.value && tabs.value[1]) tabs.value[1].content = matchStatistics.value
+  if (missingPlayersOfMatch.value && tabs.value[2]) tabs.value[2].content = missingPlayersOfMatch.value
+  if (matchComments.value && tabs.value[3]) tabs.value[3].content = matchComments.value
+}
+</script>
