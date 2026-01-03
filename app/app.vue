@@ -27,37 +27,14 @@ useSeoMeta({
 
 <template>
   <UApp>
-    <UHeader class="border-none">
-      <template #left>
-        <NuxtLink to="/">
-          <LogoAppLogo class="w-auto h-6 shrink-0" />
-        </NuxtLink>
-      </template>
-
-      <template #right>
-        <UColorModeButton />
-
-        <UButton
-          to="https://github.com/selimdoyranli/bilyapay"
-          target="_blank"
-          icon="i-simple-icons-github"
-          aria-label="GitHub"
-          color="neutral"
-          variant="ghost"
-        />
-      </template>
-    </UHeader>
-
-    <UMain>
+    <UMain class="min-h-[calc(100vh-var(--ui-footer-height))]">
       <NuxtPage />
     </UMain>
 
-    <USeparator icon="i-simple-icons-gnometerminal" />
-
-    <UFooter>
+    <UFooter class="h-[50px] fixed bottom-0 left-0 right-0 flex items-center">
       <template #left>
         <p class="text-sm text-muted">
-          Bilyapay - Bilyoner verileri ile yapay zeka futbol maçı tahmini
+          Created by @selimdoyranli
         </p>
       </template>
 

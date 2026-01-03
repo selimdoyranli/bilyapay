@@ -9,6 +9,18 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true
   },
+  app: {
+    head: {
+      title: 'Bilyapay - Bilyoner verileri ile yapay zeka futbol maçı tahmini',
+      meta: [
+        { name: 'description', content: 'Bilyapay - Bilyoner verileri ile yapay zeka futbol maçı tahmini' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+      ],
+      link: [
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;600;700&display=swap' }
+      ]
+    }
+  },
 
   css: ['~/assets/css/main.css'],
 

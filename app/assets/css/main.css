@@ -2,7 +2,7 @@
 @import "@nuxt/ui";
 
 @theme static {
-  --font-sans: 'Public Sans', sans-serif;
+  --font-sans: 'Ubuntu', sans-serif;
 
   --color-green-50: #EFFDF5;
   --color-green-100: #D9FBE8;
@@ -20,6 +20,10 @@
   --ui-primary: #167a3f;
 }
 
+:root {
+  --ui-header-height: 0px;
+  --ui-footer-height: 50px;
+}
 
 .dark {
   --ui-primary: #4dce74;

@@ -27,7 +27,7 @@
               size="xs"
               class="w-48"
             />
-            
+
             <UInput
               v-if="selectedModel"
               v-model="apiKey"
@@ -51,6 +51,7 @@
 
 <script setup lang="ts">
 import { useCompletion } from '@ai-sdk/vue'
+import { FOOTBALL_ANALYSIS_PROMPT } from '~/constants/prompts'
 
 const props = defineProps<{
   data: any
@@ -58,7 +59,7 @@ const props = defineProps<{
 
 const selectedModel = ref('gemini-3-flash-preview')
 const apiKey = ref('')
-const systemPrompt = ref('Sen profesyonel bir futbol analistisin. Aşağıdaki maç verilerini kullanarak detaylı bir maç analizi yap. İki takımın durumunu, eksiklerini ve istatistiklerini değerlendirerek maçın muhtemel gidişatı hakkında yorum yap. Ve maç skoru tahmini yap.')
+const systemPrompt = ref(FOOTBALL_ANALYSIS_PROMPT)
 
 const { completion, complete, isLoading } = useCompletion({
   api: '/api/chat',
@@ -67,9 +68,9 @@ const { completion, complete, isLoading } = useCompletion({
 
 const handleAnalyze = () => {
   // We'll pass the full content including data to the prompt
-  // But usually the system prompt is separate. 
+  // But usually the system prompt is separate.
   // The useCompletion hook sends `prompt` in the body.
-  
+
   const fullContent = `${systemPrompt.value}
 
 MAÇ VERİLERİ:
@@ -83,4 +84,3 @@ ${JSON.stringify(props.data, null, 2)}`
   })
 }
 </script>
-

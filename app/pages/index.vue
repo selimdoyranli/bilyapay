@@ -1,14 +1,10 @@
 <template>
-  <div>
+  <div class="grid place-items-center h-[calc(100vh-var(--ui-footer-height))] pt-12 pb-12">
     <UContainer>
-      <h1
-        class="font-bold text-3xl mb-2 block mt-12"
-      >
-        Bilyapay
-      </h1>
+      <LogoAppLogo class="w-auto shrink-0 mb-5 block" />
 
       <h2
-        class="font-normal text-xl block mb-12"
+        class="font-normal text-2xl block mb-12"
       >
         Bilyoner verileri ile yapay zeka futbol maçı tahmini
       </h2>
