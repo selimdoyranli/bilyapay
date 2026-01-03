@@ -3,8 +3,15 @@
     <UContainer class="flex-1 w-full pt-[20vh] pb-[20vh] max-w-6xl">
       <FormPredictForm @on-submit="handlePredictFormSubmit" />
 
+      <p
+        v-if="isLoading"
+        class="mt-8 sm:mt-12 text-center text-gray-500"
+      >
+        Veriler getiriliyor...
+      </p>
+
       <UTabs
-        v-if="matchDetails"
+        v-else-if="matchDetails"
         class="mt-8 sm:mt-12"
         data-id="match-tabs"
         :items="tabItems"
@@ -92,7 +99,7 @@ const tabContents = reactive<TabContents>({
   matchComments: null
 })
 
-const { execute: executeMatchDetails, data: matchDetails } = await useAsyncData<MatchDetailsType | null>(
+const { execute: executeMatchDetails, data: matchDetails, pending: pendingMatchDetails } = await useAsyncData<MatchDetailsType | null>(
   `matchDetails:${state.matchId}`,
   () => state.matchId ? fetchMatchDetails(state.matchId) : Promise.resolve(null),
   {
@@ -101,7 +108,7 @@ const { execute: executeMatchDetails, data: matchDetails } = await useAsyncData<
   }
 )
 
-const { execute: executeMatchStatistics, data: matchStatistics } = await useAsyncData<MatchStatisticsType | null>(
+const { execute: executeMatchStatistics, data: matchStatistics, pending: pendingMatchStatistics } = await useAsyncData<MatchStatisticsType | null>(
   `matchStatistics:${state.matchId}`,
   () => state.matchId ? fetchMatchStatistics(state.matchId) : Promise.resolve(null),
   {
@@ -110,7 +117,7 @@ const { execute: executeMatchStatistics, data: matchStatistics } = await useAsyn
   }
 )
 
-const { execute: executeMissingPlayersOfMatch, data: missingPlayersOfMatch } = await useAsyncData<MissingPlayersData | null>(
+const { execute: executeMissingPlayersOfMatch, data: missingPlayersOfMatch, pending: pendingMissingPlayers } = await useAsyncData<MissingPlayersData | null>(
   `missingPlayersOfMatch:${state.matchId}`,
   () => state.matchId ? fetchMissingPlayersOfMatch(state.matchId) : Promise.resolve(null),
   {
@@ -119,7 +126,7 @@ const { execute: executeMissingPlayersOfMatch, data: missingPlayersOfMatch } = a
   }
 )
 
-const { execute: executeMatchComments, data: matchComments } = await useAsyncData<MatchCommentsData | null>(
+const { execute: executeMatchComments, data: matchComments, pending: pendingMatchComments } = await useAsyncData<MatchCommentsData | null>(
   `matchComments:${state.matchId}`,
   () => state.matchId ? fetchMatchComments(state.matchId) : Promise.resolve(null),
   {
@@ -127,6 +134,10 @@ const { execute: executeMatchComments, data: matchComments } = await useAsyncDat
     watch: [() => state.matchId]
   }
 )
+
+const isLoading = computed(() => {
+  return pendingMatchDetails.value || pendingMatchStatistics.value || pendingMissingPlayers.value || pendingMatchComments.value
+})
 
 const handlePredictFormSubmit = async (bilyonerMatchLink: string): Promise<void> => {
   const matchId = Number(bilyonerMatchLink.split('/')[5])
