@@ -7,22 +7,22 @@
         v-if="matchDetails"
         class="mt-8 sm:mt-12"
         data-id="match-tabs"
-        :items="tabs"
+        :items="tabItems"
       >
-        <template #ai-analysis="{ item }">
-          <MatchAiAnalysis :data="item.content" />
+        <template #ai-analysis>
+          <MatchAiAnalysis :data="tabContents.aiAnalysis" />
         </template>
-        <template #match-details="{ item }">
-          <MatchDetails :data="item.content" />
+        <template #match-details>
+          <MatchDetails :data="tabContents.matchDetails" />
         </template>
-        <template #match-statistics="{ item }">
-          <MatchStatistics :data="item.content" />
+        <template #match-statistics>
+          <MatchStatistics :data="tabContents.matchStatistics" />
         </template>
-        <template #missing-players="{ item }">
-          <MatchMissingPlayers :data="item.content" />
+        <template #missing-players>
+          <MatchMissingPlayers :data="tabContents.missingPlayers" />
         </template>
-        <template #match-comments="{ item }">
-          <MatchComments :data="item.content" />
+        <template #match-comments>
+          <MatchComments :data="tabContents.matchComments" />
         </template>
       </UTabs>
     </UContainer>
@@ -30,45 +30,69 @@
 </template>
 
 <script setup lang="ts">
+import type {
+  MatchDetails as MatchDetailsType,
+  MatchStatistics as MatchStatisticsType,
+  MissingPlayersData,
+  MatchCommentsData,
+  MatchData
+} from '~/types/bilyoner'
+
 const { fetchMatchDetails, fetchMatchStatistics, fetchMissingPlayersOfMatch, fetchMatchComments } = useBilyonerApi()
 
-const state = reactive<{ matchId: number | null }>({
+interface PageState {
+  matchId: number | null
+}
+
+const state = reactive<PageState>({
   matchId: null
 })
 
-const tabs = ref([
+const tabItems = [
   {
     label: 'AI Analizi',
     icon: 'i-heroicons-sparkles',
-    slot: 'ai-analysis'
+    slot: 'ai-analysis' as const
   },
   {
     label: 'Maç detayları',
     icon: 'i-heroicons-information-circle',
-    content: 'Maç detayları' as any,
-    slot: 'match-details'
+    slot: 'match-details' as const
   },
   {
     label: 'Maç istatistikleri',
     icon: 'i-heroicons-chart-bar',
-    content: 'Maç istatistikleri' as any,
-    slot: 'match-statistics'
+    slot: 'match-statistics' as const
   },
   {
     label: 'Eksik oyuncular',
     icon: 'i-heroicons-user-minus',
-    content: 'Eksik oyuncular' as any,
-    slot: 'missing-players'
+    slot: 'missing-players' as const
   },
   {
     label: 'Maç yorumları',
     icon: 'i-heroicons-chat-bubble-bottom-center-text',
-    content: 'Maç yorumları' as any,
-    slot: 'match-comments'
+    slot: 'match-comments' as const
   }
-])
+]
 
-const { execute: executeMatchDetails, data: matchDetails } = await useAsyncData(
+interface TabContents {
+  aiAnalysis: MatchData | null
+  matchDetails: MatchDetailsType | null
+  matchStatistics: MatchStatisticsType | null
+  missingPlayers: MissingPlayersData | null
+  matchComments: MatchCommentsData | null
+}
+
+const tabContents = reactive<TabContents>({
+  aiAnalysis: null,
+  matchDetails: null,
+  matchStatistics: null,
+  missingPlayers: null,
+  matchComments: null
+})
+
+const { execute: executeMatchDetails, data: matchDetails } = await useAsyncData<MatchDetailsType | null>(
   `matchDetails:${state.matchId}`,
   () => state.matchId ? fetchMatchDetails(state.matchId) : Promise.resolve(null),
   {
@@ -77,7 +101,7 @@ const { execute: executeMatchDetails, data: matchDetails } = await useAsyncData(
   }
 )
 
-const { execute: executeMatchStatistics, data: matchStatistics } = await useAsyncData(
+const { execute: executeMatchStatistics, data: matchStatistics } = await useAsyncData<MatchStatisticsType | null>(
   `matchStatistics:${state.matchId}`,
   () => state.matchId ? fetchMatchStatistics(state.matchId) : Promise.resolve(null),
   {
@@ -86,7 +110,7 @@ const { execute: executeMatchStatistics, data: matchStatistics } = await useAsyn
   }
 )
 
-const { execute: executeMissingPlayersOfMatch, data: missingPlayersOfMatch } = await useAsyncData(
+const { execute: executeMissingPlayersOfMatch, data: missingPlayersOfMatch } = await useAsyncData<MissingPlayersData | null>(
   `missingPlayersOfMatch:${state.matchId}`,
   () => state.matchId ? fetchMissingPlayersOfMatch(state.matchId) : Promise.resolve(null),
   {
@@ -95,7 +119,7 @@ const { execute: executeMissingPlayersOfMatch, data: missingPlayersOfMatch } = a
   }
 )
 
-const { execute: executeMatchComments, data: matchComments } = await useAsyncData(
+const { execute: executeMatchComments, data: matchComments } = await useAsyncData<MatchCommentsData | null>(
   `matchComments:${state.matchId}`,
   () => state.matchId ? fetchMatchComments(state.matchId) : Promise.resolve(null),
   {
@@ -104,7 +128,7 @@ const { execute: executeMatchComments, data: matchComments } = await useAsyncDat
   }
 )
 
-const handlePredictFormSubmit = async (bilyonerMatchLink: string) => {
+const handlePredictFormSubmit = async (bilyonerMatchLink: string): Promise<void> => {
   const matchId = Number(bilyonerMatchLink.split('/')[5])
   state.matchId = matchId
 
@@ -117,30 +141,30 @@ const handlePredictFormSubmit = async (bilyonerMatchLink: string) => {
   ])
 
   if (matchDetails.value && matchStatistics.value) {
-    const stats = matchStatistics.value as any
+    const stats = matchStatistics.value
     const homeTeamName = stats.oddStatistics?.generalStats?.homeTeamName
     const awayTeamName = stats.oddStatistics?.generalStats?.awayTeamName
 
     if (homeTeamName) {
-      ;(matchDetails.value as any).homeTeamName = homeTeamName
+      matchDetails.value.homeTeamName = homeTeamName
     }
     if (awayTeamName) {
-      ;(matchDetails.value as any).awayTeamName = awayTeamName
+      matchDetails.value.awayTeamName = awayTeamName
     }
   }
 
-  const matchData = {
-    details: matchDetails.value,
-    statistics: matchStatistics.value,
-    missingPlayers: missingPlayersOfMatch.value,
-    comments: matchComments.value
+  const matchData: MatchData = {
+    details: matchDetails.value ?? null,
+    statistics: matchStatistics.value ?? null,
+    missingPlayers: missingPlayersOfMatch.value ?? null,
+    comments: matchComments.value ?? null
   }
 
-  if (tabs.value[0]) tabs.value[0].content = matchData
-  if (matchDetails.value && tabs.value[1]) tabs.value[1].content = matchDetails.value
-  if (matchStatistics.value && tabs.value[2]) tabs.value[2].content = matchStatistics.value
-  if (missingPlayersOfMatch.value && tabs.value[3]) tabs.value[3].content = missingPlayersOfMatch.value
-  if (matchComments.value && tabs.value[4]) tabs.value[4].content = matchComments.value
+  tabContents.aiAnalysis = matchData
+  tabContents.matchDetails = matchDetails.value ?? null
+  tabContents.matchStatistics = matchStatistics.value ?? null
+  tabContents.missingPlayers = missingPlayersOfMatch.value ?? null
+  tabContents.matchComments = matchComments.value ?? null
 
   nextTick(() => {
     const matchTabs = document.querySelector('[data-id="match-tabs"]')

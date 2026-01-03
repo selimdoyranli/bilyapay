@@ -1,5 +1,8 @@
 <template>
-  <div class="space-y-6">
+  <div
+    v-if="data"
+    class="space-y-6"
+  >
     <!-- Top Goal Scorers -->
     <div
       v-if="data.topGoalScorers"
@@ -596,10 +599,18 @@ interface StatisticsData {
   matchesBetween?: TeamForm
 }
 
-const props = defineProps<{ data: StatisticsData }>()
+const props = defineProps<{ data: StatisticsData | null }>()
+
+interface StatTab {
+  label: string
+  slot: string
+  data: OddStatsDetail
+}
 
 const statTabs = computed(() => {
-  const tabs = []
+  const tabs: StatTab[] = []
+  if (!props.data) return tabs
+
   if (props.data.oddStatistics?.generalStats) {
     tabs.push({
       label: 'Genel',

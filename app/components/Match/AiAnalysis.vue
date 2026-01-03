@@ -67,9 +67,10 @@
 <script setup lang="ts">
 import { useCompletion } from '@ai-sdk/vue'
 import { FOOTBALL_ANALYSIS_PROMPT } from '~/constants/prompts'
+import type { MatchData } from '~/types/bilyoner'
 
 const props = defineProps<{
-  data: unknown
+  data: MatchData | null
 }>()
 
 const selectedModel = ref('gemini-3-flash-preview')

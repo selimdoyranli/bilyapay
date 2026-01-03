@@ -1,5 +1,8 @@
 <template>
-  <div class="space-y-6">
+  <div
+    v-if="data"
+    class="space-y-6"
+  >
     <!-- Match Info Header -->
     <UCard>
       <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4">
@@ -416,6 +419,6 @@ interface MatchData {
 }
 
 defineProps<{
-  data: MatchData
+  data: MatchData | null
 }>()
 </script>

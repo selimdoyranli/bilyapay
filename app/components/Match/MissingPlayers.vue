@@ -98,6 +98,6 @@ interface MissingPlayersData {
 }
 
 defineProps<{
-  data: MissingPlayersData
+  data: MissingPlayersData | null
 }>()
 </script>
