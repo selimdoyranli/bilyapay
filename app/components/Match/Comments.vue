@@ -6,7 +6,7 @@
       class="bg-none border-2 border-gray-100 dark:border-gray-900"
     >
       <template #header>
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
           <div class="flex items-center gap-3">
             <UAvatar
               :alt="comment.authorName"
@@ -22,7 +22,7 @@
             v-if="comment.marketInfo"
             color="primary"
             variant="soft"
-            class="hidden sm:flex"
+            class="flex self-start sm:self-center"
           >
             {{ comment.marketInfo.label }} @ {{ comment.marketInfo.currentOddsWeb }}
           </UBadge>

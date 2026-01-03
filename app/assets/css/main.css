@@ -25,6 +25,11 @@
   --ui-footer-height: 50px;
 }
 
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 .dark {
   --ui-primary: #4dce74;
 }

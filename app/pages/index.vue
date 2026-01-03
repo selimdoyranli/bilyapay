@@ -1,11 +1,12 @@
 <template>
-  <div class="grid place-items-center h-[calc(100vh-var(--ui-footer-height))]">
-    <UContainer class="pt-12 pb-[20vh]">
+  <div class="flex flex-col min-h-[calc(100vh-var(--ui-footer-height))]">
+    <UContainer class="flex-1 w-full pt-[20vh] pb-[20vh] max-w-6xl">
       <FormPredictForm @on-submit="handlePredictFormSubmit" />
 
       <UTabs
         v-if="matchDetails"
-        class="mt-12"
+        class="mt-8 sm:mt-12"
+        data-id="match-tabs"
         :items="tabs"
       >
         <template #ai-analysis="{ item }">
@@ -140,5 +141,12 @@ const handlePredictFormSubmit = async (bilyonerMatchLink: string) => {
   if (matchStatistics.value && tabs.value[2]) tabs.value[2].content = matchStatistics.value
   if (missingPlayersOfMatch.value && tabs.value[3]) tabs.value[3].content = missingPlayersOfMatch.value
   if (matchComments.value && tabs.value[4]) tabs.value[4].content = matchComments.value
+
+  nextTick(() => {
+    const matchTabs = document.querySelector('[data-id="match-tabs"]')
+    if (matchTabs) {
+      matchTabs.scrollIntoView({ behavior: 'smooth' })
+    }
+  })
 }
 </script>

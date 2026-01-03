@@ -5,22 +5,25 @@
     </h5>
     <small class="text-gray-500 dark:text-gray-400 mb-4 block">
       Bilyoner verileri otomatik olarak sistem girdisine iliştirilir.
+      <br>
+      Model: gemini-3-flash-preview
     </small>
 
     <UChatPrompt
       v-model="systemPrompt"
       :rows="4"
       placeholder="Analiz için talimatları buraya girin..."
+      :autofocus="false"
       @submit="handleAnalyze"
     >
       <template #footer>
-        <div class="flex items-center justify-between w-full gap-2">
-          <div class="flex items-center gap-2 flex-1">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between w-full gap-2">
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-1 opacity-0 pointer-events-none">
             <USelect
               v-model="selectedModel"
               :options="['gemini-2.5-pro', 'gemini-3-flash-preview']"
               size="xs"
-              class="w-48"
+              class="w-full sm:w-48"
             />
 
             <UInput
@@ -30,7 +33,7 @@
               placeholder="API Key (Optional)"
               icon="i-heroicons-key"
               size="xs"
-              class="flex-1 max-w-xs"
+              class="flex-1 w-full sm:max-w-xs"
             />
           </div>
 
@@ -38,6 +41,7 @@
             :loading="isLoading"
             size="md"
             icon="i-heroicons-sparkles"
+            class="w-full sm:w-auto flex justify-center"
             @click="handleAnalyze"
           >
             Analiz et
@@ -53,7 +57,7 @@
       <h4 class="font-bold mb-4">
         Analiz Sonucu:
       </h4>
-      <div class="prose dark:prose-invert max-w-none">
+      <div class="prose dark:prose-invert max-w-none break-words overflow-hidden">
         <MDC :value="completion" />
       </div>
     </div>
@@ -65,7 +69,7 @@ import { useCompletion } from '@ai-sdk/vue'
 import { FOOTBALL_ANALYSIS_PROMPT } from '~/constants/prompts'
 
 const props = defineProps<{
-  data: any
+  data: unknown
 }>()
 
 const selectedModel = ref('gemini-3-flash-preview')
@@ -78,10 +82,6 @@ const { completion, complete, isLoading } = useCompletion({
 })
 
 const handleAnalyze = () => {
-  // We'll pass the full content including data to the prompt
-  // But usually the system prompt is separate.
-  // The useCompletion hook sends `prompt` in the body.
-
   const fullContent = `${systemPrompt.value}
 
 MAÇ VERİLERİ:
@@ -90,7 +90,7 @@ ${JSON.stringify(props.data, null, 2)}`
   complete(fullContent, {
     body: {
       model: selectedModel.value,
-      apiKey: apiKey.value // Send API key to backend
+      apiKey: apiKey.value
     }
   })
 }

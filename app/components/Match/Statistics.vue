@@ -80,7 +80,7 @@
               <h4 class="font-semibold text-sm text-gray-600 dark:text-gray-400 border-b pb-1">
                 {{ item.data.matchResultStats.betTypeName }}
               </h4>
-              <div class="grid grid-cols-3 gap-2 text-center text-sm">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-center text-sm">
                 <div>
                   <div class="font-medium text-primary-500">
                     {{ item.data.matchResultStats.betTypeWonTitle }}

@@ -38,9 +38,12 @@ const openCreditsModal = () => {
       <NuxtPage />
     </UMain>
 
-    <UFooter class="h-[50px] fixed bottom-0 left-0 right-0 flex items-center bg-neutral-900">
+    <UFooter
+      class="h-[50px] fixed bottom-0 left-0 right-0 flex items-center bg-neutral-900"
+      :ui="{ right: 'hidden lg:flex' }"
+    >
       <template #left>
-        <p class="text-sm text-muted">
+        <p class="text-sm text-muted pb-2">
           Created by
           <button
             class="text-blue-400 hover:text-blue-300 underline cursor-pointer transition-colors"

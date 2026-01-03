@@ -27,7 +27,7 @@
     </UFormField>
     <UButton
       type="submit"
-      class="mt-4"
+      class="mt-4 w-full sm:w-auto flex justify-center"
       size="md"
       loading-auto
     >
