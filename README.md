@@ -1,60 +1,151 @@
-# Nuxt Starter Template
+# Bilyapay 🏆
 
 [![Nuxt UI](https://img.shields.io/badge/Made%20with-Nuxt%20UI-00DC82?logo=nuxt&labelColor=020420)](https://ui.nuxt.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Google AI](https://img.shields.io/badge/Google_AI-4285F4?logo=google&logoColor=white)](https://ai.google.dev/)
 
-Use this template to get started with [Nuxt UI](https://ui.nuxt.com) quickly.
+Bilyapay, Bilyoner verilerini kullanarak yapay zeka destekli futbol maçı tahminleri yapan modern bir web uygulamasıdır. Google Generative AI (Gemini) ile gelişmiş analizler sunar.
 
-- [Live demo](https://starter-template.nuxt.dev/)
-- [Documentation](https://ui.nuxt.com/docs/getting-started/installation/nuxt)
+## ✨ Özellikler
 
-<a href="https://starter-template.nuxt.dev/" target="_blank">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png">
-    <img alt="Nuxt Starter Template" src="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png">
-  </picture>
-</a>
+- 🔍 **Gerçek Zamanlı Veri**: Bilyoner API'si üzerinden güncel maç verileri
+- 🤖 **AI Destekli Analiz**: Google Gemini ile detaylı maç tahminleri
+- 📊 **Kapsamlı İstatistikler**: Maç sonuçları, oyuncu performansları, lig durumu
+- 👥 **Oyuncu Takibi**: Sakat ve cezalı oyuncu bilgileri
+- 💬 **Topluluk Yorumları**: Kullanıcı yorumları ve bahis oranları
+- 📱 **Responsive Tasarım**: Mobil uyumlu modern arayüz
+- 🎯 **Tahmin Matrisi**: Kazanma olasılıkları ve gol beklentileri
 
-> The starter template for Vue is on https://github.com/nuxt-ui-templates/starter-vue.
+## 🛠️ Teknoloji Stack
 
-## Quick Start
+### Frontend
+- **Nuxt 4** - Vue.js tabanlı full-stack framework
+- **Vue 3** - Progressive JavaScript framework
+- **TypeScript** - Tip güvenliği
+- **Nuxt UI** - Modern UI bileşenleri
+- **Tailwind CSS** - Utility-first CSS framework
 
-```bash [Terminal]
-npm create nuxt@latest -- -t github:nuxt-ui-templates/starter
+### Backend & AI
+- **Google Generative AI (Gemini)** - AI analiz motoru
+- **Nuxt Server API** - Server-side endpoints
+- **AI SDK** - Google AI entegrasyonu
+
+### Veri Kaynağı
+- **Bilyoner API** - Futbol maç verileri ve istatistikler
+
+## 📋 Gereksinimler
+
+- **Node.js** >= 22.12.0
+- **pnpm** >= 10.26.1
+- **Google AI API Key** (Gemini için)
+
+## 🚀 Kurulum
+
+### 1. Repoyu Klonlayın
+
+```bash
+git clone https://github.com/selimdoyranli/bilyapay.git
+cd bilyapay
 ```
 
-## Deploy your own
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-name=starter&repository-url=https%3A%2F%2Fgithub.com%2Fnuxt-ui-templates%2Fstarter&demo-image=https%3A%2F%2Fui.nuxt.com%2Fassets%2Ftemplates%2Fnuxt%2Fstarter-dark.png&demo-url=https%3A%2F%2Fstarter-template.nuxt.dev%2F&demo-title=Nuxt%20Starter%20Template&demo-description=A%20minimal%20template%20to%20get%20started%20with%20Nuxt%20UI.)
-
-## Setup
-
-Make sure to install the dependencies:
+### 2. Bağımlılıkları Yükleyin
 
 ```bash
 pnpm install
 ```
 
-## Development Server
+### 3. Environment Değişkenlerini Ayarlayın
 
-Start the development server on `http://localhost:3000`:
+`.env` dosyasını oluşturun ve aşağıdaki değişkenleri ekleyin:
+
+```env
+GOOGLE_GENERATIVE_AI_API_KEY=your_google_ai_api_key_here
+```
+
+> **Not**: Google AI API anahtarınızı almak için [Google AI Studio](https://makersuite.google.com/app/apikey)'ya gidin.
+
+### 4. Geliştirme Sunucusunu Başlatın
 
 ```bash
 pnpm dev
 ```
 
-## Production
+Uygulama `http://localhost:3000` adresinde çalışacaktır.
 
-Build the application for production:
+## 🔧 API Endpoints
+
+### Bilyoner API Entegrasyonları
+
+- `GET /api/bilyoner/match-detail?matchId={id}` - Maç detayları
+- `GET /api/bilyoner/match-statistics?matchId={id}` - Maç istatistikleri
+- `GET /api/bilyoner/match-missing-players?matchId={id}` - Eksik oyuncular
+- `GET /api/bilyoner/match-comments?matchId={id}` - Maç yorumları
+- `GET /api/bilyoner/trending-matches` - Trend maçlar
+
+### AI Chat Endpoint
+
+- `POST /api/chat` - AI analiz isteği
+
+## 🎯 Nasıl Çalışır?
+
+1. **Maç Seçimi**: Kullanıcı trend maçlar arasından bir maç seçer
+2. **Veri Toplama**: Bilyoner API'sinden maç detayları, istatistikler, oyuncu bilgileri çekilir
+3. **AI Analiz**: Google Gemini, toplanan verileri analiz eder ve tahmin üretir
+4. **Sonuç Gösterimi**: Detaylı analiz raporu kullanıcıya sunulur
+
+### AI Analiz İçeriği
+
+AI aşağıdaki verileri kullanarak analiz yapar:
+- Takım istatistikleri ve form durumu
+- Oyuncu kadrosu ve eksik oyuncular
+- Bahis oranları ve piyasa beklentileri
+- Lig pozisyonu ve tarihsel performans
+- Hakem ve stadyum bilgileri
+
+## 🏗️ Geliştirme
+
+### Kullanılabilir Komutlar
 
 ```bash
+# Geliştirme sunucusu
+pnpm dev
+
+# Production build
 pnpm build
-```
 
-Locally preview production build:
-
-```bash
+# Production preview
 pnpm preview
+
+# TypeScript kontrolü
+pnpm typecheck
+
+# Lint kontrolü
+pnpm lint
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+### Kod Kalitesi
+
+Proje aşağıdaki araçlarla kod kalitesini korumaktadır:
+
+- **ESLint** - Kod linting
+- **TypeScript** - Tip kontrolü
+- **Nuxt DevTools** - Geliştirme araçları
+
+## 🤝 Katkıda Bulunma
+
+1. Fork edin
+2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
+3. Commit edin (`git commit -m 'Add amazing feature'`)
+4. Push edin (`git push origin feature/amazing-feature`)
+5. Pull Request oluşturun
+
+## 📄 Lisans
+
+Bu proje MIT lisansı altında lisanslanmıştır.
+
+## 📞 Creator
+
+- **GitHub**: [@selimdoyranli](https://github.com/selimdoyranli)
+- **Proje**: [Bilyapay](https://github.com/selimdoyranli/bilyapay)
+
+---
