@@ -20,6 +20,9 @@
         class="mt-12"
         :items="tabs"
       >
+        <template #ai-analysis="{ item }">
+          <MatchAiAnalysis :data="item.content" />
+        </template>
         <template #match-details="{ item }">
           <MatchDetails :data="item.content" />
         </template>
@@ -45,6 +48,11 @@ const state = reactive<{ matchId: number | null }>({
 })
 
 const tabs = ref([
+  {
+    label: 'AI Analizi',
+    icon: 'i-heroicons-sparkles',
+    slot: 'ai-analysis'
+  },
   {
     label: 'Maç detayları',
     icon: 'i-heroicons-information-circle',
@@ -132,9 +140,17 @@ const handlePredictFormSubmit = async (bilyonerMatchLink: string) => {
     }
   }
 
-  if (matchDetails.value && tabs.value[0]) tabs.value[0].content = matchDetails.value
-  if (matchStatistics.value && tabs.value[1]) tabs.value[1].content = matchStatistics.value
-  if (missingPlayersOfMatch.value && tabs.value[2]) tabs.value[2].content = missingPlayersOfMatch.value
-  if (matchComments.value && tabs.value[3]) tabs.value[3].content = matchComments.value
+  const matchData = {
+    details: matchDetails.value,
+    statistics: matchStatistics.value,
+    missingPlayers: missingPlayersOfMatch.value,
+    comments: matchComments.value
+  }
+
+  if (tabs.value[0]) tabs.value[0].content = matchData
+  if (matchDetails.value && tabs.value[1]) tabs.value[1].content = matchDetails.value
+  if (matchStatistics.value && tabs.value[2]) tabs.value[2].content = matchStatistics.value
+  if (missingPlayersOfMatch.value && tabs.value[3]) tabs.value[3].content = missingPlayersOfMatch.value
+  if (matchComments.value && tabs.value[4]) tabs.value[4].content = matchComments.value
 }
 </script>

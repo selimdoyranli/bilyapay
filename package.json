@@ -14,14 +14,19 @@
     "typecheck": "nuxt typecheck"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.2",
+    "@ai-sdk/vue": "^3.0.5",
     "@iconify-json/lucide": "^1.2.82",
     "@iconify-json/simple-icons": "^1.2.63",
     "@nuxt/ui": "^4.3.0",
+    "ai": "^6.0.5",
     "nuxt": "^4.2.2",
     "ufo": "^1.6.1"
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.12.1",
+    "@nuxtjs/mdc": "^0.19.2",
+    "@types/node": "^22.19.3",
     "eslint": "^9.39.2",
     "typescript": "^5.9.3",
     "vue-tsc": "^3.2.1"
