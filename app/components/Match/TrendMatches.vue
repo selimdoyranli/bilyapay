@@ -1,6 +1,12 @@
 <template>
-  <div v-if="loading" class="flex justify-center items-center py-4">
-    <UIcon name="i-heroicons-arrow-path" class="animate-spin h-8 w-8 text-primary-500" />
+  <div
+    v-if="loading"
+    class="flex justify-center items-center py-4"
+  >
+    <UIcon
+      name="i-heroicons-arrow-path"
+      class="animate-spin h-8 w-8 text-primary-500"
+    />
   </div>
   <UCarousel
     v-else-if="matches && matches.length > 0"
@@ -12,7 +18,7 @@
   >
     <div class="p-2 w-full">
       <UCard
-        :ui="{ body: { padding: 'px-4 py-3 sm:p-4' } }"
+        :ui="{ body: ['px-4', 'py-3', 'sm:p-4'] }"
         class="hover:border-primary-500 transition-colors cursor-pointer h-full"
         @click="selectMatch(match)"
       >
@@ -22,12 +28,17 @@
             <span class="text-[10px] font-medium text-primary-500">{{ match.strt }}</span>
           </div>
 
-          <div class="font-semibold text-xs truncate" :title="match.en">
+          <div
+            class="font-semibold text-xs truncate"
+            :title="match.en"
+          >
             {{ match.en }}
           </div>
 
           <div class="mt-1 p-1.5 bg-gray-50 dark:bg-gray-800 rounded text-center">
-            <div class="text-[10px] text-gray-500 mb-0.5 truncate">{{ match.market?.mrn }}</div>
+            <div class="text-[10px] text-gray-500 mb-0.5 truncate">
+              {{ match.market?.mrn }}
+            </div>
             <div class="flex justify-center items-center gap-2 font-bold text-xs">
               <span>{{ match.market?.n }}</span>
               <span class="text-primary-600 dark:text-primary-400">{{ match.market?.val }}</span>
@@ -37,24 +48,39 @@
       </UCard>
     </div>
   </UCarousel>
-  <div v-else class="text-center text-gray-500 mt-4">
+  <div
+    v-else
+    class="text-center text-gray-500 mt-4"
+  >
     Trend maçlar bulunamadı.
   </div>
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-  matches: any[]
+interface TrendingMatch {
+  id: number
+  en: string
+  lgn: string
+  strt: string
+  market?: {
+    mrn: string
+    n: string
+    val: number
+  }
+}
+
+defineProps<{
+  matches: TrendingMatch[]
   loading?: boolean
 }>()
 
 const emit = defineEmits(['select'])
 
-function selectMatch(match: any) {
+function selectMatch(match: TrendingMatch) {
   // Construct the URL similar to the placeholder
   // https://www.bilyoner.com/mac-karti/futbol/2549856/oranlar/1
   // id: 2552563
-  // We don't have enough info to construct the full URL perfectly without knowing the logic, 
+  // We don't have enough info to construct the full URL perfectly without knowing the logic,
   // but we can try to guess or just pass the ID if the parent handles it.
   // The placeholder in PredictForm is: https://www.bilyoner.com/mac-karti/futbol/2549856/oranlar/1
   // The ID in the data is match.id.
@@ -62,4 +88,3 @@ function selectMatch(match: any) {
   emit('select', url)
 }
 </script>
-

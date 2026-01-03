@@ -39,11 +39,26 @@
     <h3 class="text-lg font-semibold mb-4">
       Popüler Maçlar
     </h3>
-    <MatchTrendMatches
-      :matches="trendingMatches"
-      :loading="pending"
-      @select="onMatchSelect"
-    />
+
+    <template v-if="pending">
+      <p class="text-gray-500">
+        Popüler maçlar getiriliyor...
+      </p>
+    </template>
+
+    <template v-else-if="error">
+      <p class="text-red-500">
+        Popüler maçlar getirilirken bir hata oluştu.
+      </p>
+    </template>
+
+    <template v-else>
+      <MatchTrendMatches
+        :matches="trendingMatchesList"
+        :loading="pending"
+        @select="onMatchSelect"
+      />
+    </template>
   </div>
 </template>
 
@@ -66,12 +81,15 @@ const emit = defineEmits(['on-submit'])
 
 const { fetchTrendMatches } = useBilyonerApi()
 
-const { data, pending } = await useAsyncData('trending-matches', () => fetchTrendMatches(), { lazy: true })
-console.log(data)
+const { execute: executeTrendMatches, data: trendingMatches, pending, error } = await useAsyncData<TrendingMatch[]>('trending-matches', () => fetchTrendMatches() as Promise<TrendingMatch[]>, {
+  immediate: false,
+  default: () => []
+})
 
-const trendingMatches = computed(() => {
-  const response = data.value as { data: TrendingMatch[] } | null
-  return response?.data || []
+const trendingMatchesList = computed(() => (trendingMatches.value ?? []) as TrendingMatch[])
+
+onMounted(() => {
+  executeTrendMatches()
 })
 
 function onMatchSelect(url: string) {
