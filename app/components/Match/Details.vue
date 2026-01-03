@@ -116,7 +116,7 @@
             </ul>
           </div>
 
-          <UDivider />
+          <USeparator />
 
           <div>
             <h5 class="font-semibold mb-2 text-sm text-gray-500 uppercase">
@@ -193,7 +193,7 @@
             </ul>
           </div>
 
-          <UDivider />
+          <USeparator />
 
           <div>
             <h5 class="font-semibold mb-2 text-sm text-gray-500 uppercase">

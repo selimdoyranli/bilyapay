@@ -13,7 +13,7 @@
         </template>
         <div class="space-y-2">
           <div
-            v-for="scorer in data.topGoalScorers.homeTopGoalScorers.topScorers"
+            v-for="scorer in data.topGoalScorers.homeTopGoalScorers.topScorers || []"
             :key="scorer.name"
             class="flex justify-between items-center"
           >
@@ -23,7 +23,7 @@
             </UBadge>
           </div>
           <div
-            v-if="data.topGoalScorers.homeTopGoalScorers.topScorers.length === 0"
+            v-if="!data.topGoalScorers.homeTopGoalScorers.topScorers || data.topGoalScorers.homeTopGoalScorers.topScorers.length === 0"
             class="text-gray-500 text-sm italic"
           >
             Veri yok
@@ -38,7 +38,7 @@
         </template>
         <div class="space-y-2">
           <div
-            v-for="scorer in data.topGoalScorers.awayTopGoalScorers.topScorers"
+            v-for="scorer in data.topGoalScorers.awayTopGoalScorers.topScorers || []"
             :key="scorer.name"
             class="flex justify-between items-center"
           >
@@ -51,7 +51,7 @@
             </UBadge>
           </div>
           <div
-            v-if="data.topGoalScorers.awayTopGoalScorers.topScorers.length === 0"
+            v-if="!data.topGoalScorers.awayTopGoalScorers.topScorers || data.topGoalScorers.awayTopGoalScorers.topScorers.length === 0"
             class="text-gray-500 text-sm italic"
           >
             Veri yok
@@ -86,38 +86,65 @@
                     {{ item.data.matchResultStats.betTypeWonTitle }}
                   </div>
                   <div class="text-lg font-bold">
-                    {{ item.data.matchResultStats.homeWon }}
+                    {{ item.data.matchResultStats.homeWon || 'Veri yok' }}
                   </div>
-                  <UMeter
-                    :value="item.data.matchResultStats.homeWonPercentage"
+                  <UProgress
+                    v-if="item.data.matchResultStats.homeWon"
+                    :model-value="parseFloat(String(item.data.matchResultStats.homeWonPercentage)) || 0"
                     color="primary"
                   />
+                  <div
+                    v-else
+                    class="text-gray-500 text-sm italic"
+                  >
+                    Veri yok
+                  </div>
                 </div>
                 <div>
                   <div class="font-medium text-gray-500">
                     {{ item.data.matchResultStats.betTypeDrawTitle }}
                   </div>
                   <div class="text-lg font-bold">
-                    {{ item.data.matchResultStats.homeDraw }}
+                    {{ item.data.matchResultStats.homeDraw || 'Veri yok' }}
                   </div>
-                  <UMeter
-                    :value="item.data.matchResultStats.homeDrawPercentage"
-                    color="gray"
+                  <UProgress
+                    v-if="item.data.matchResultStats.homeDraw"
+                    :model-value="parseFloat(String(item.data.matchResultStats.homeDrawPercentage)) || 0"
+                    color="neutral"
                   />
+                  <div
+                    v-else
+                    class="text-gray-500 text-sm italic"
+                  >
+                    Veri yok
+                  </div>
                 </div>
                 <div>
                   <div class="font-medium text-blue-500">
                     {{ item.data.matchResultStats.betTypeLostTitle }}
                   </div>
                   <div class="text-lg font-bold">
-                    {{ item.data.matchResultStats.homeLost || item.data.matchResultStats.awayLost }}
+                    {{ item.data.matchResultStats.homeLost || item.data.matchResultStats.awayLost || 'Veri yok' }}
                   </div>
-                  <UMeter
-                    :value="item.data.matchResultStats.homeLostPercentage || item.data.matchResultStats.awayLostPercentage"
-                    color="blue"
+                  <UProgress
+                    v-if="item.data.matchResultStats.homeLost || item.data.matchResultStats.awayLost"
+                    :model-value="parseFloat(String(item.data.matchResultStats.homeLostPercentage || item.data.matchResultStats.awayLostPercentage)) || 0"
+                    color="info"
                   />
+                  <div
+                    v-else
+                    class="text-gray-500 text-sm italic"
+                  >
+                    Veri yok
+                  </div>
                 </div>
               </div>
+            </div>
+            <div
+              v-else
+              class="text-gray-500 text-sm italic"
+            >
+              Maç sonucu istatistikleri için veri yok
             </div>
 
             <!-- KG (Both Teams to Score) -->
@@ -132,24 +159,44 @@
                 <div>
                   <div class="flex justify-between text-sm mb-1">
                     <span>{{ item.data.bothTeamsToScoreStats.betTypeYesTitle }} (Ev)</span>
-                    <span class="font-bold">{{ item.data.bothTeamsToScoreStats.homeBothTeamsToScoreYesPercentage }}%</span>
+                    <span class="font-bold">{{ item.data.bothTeamsToScoreStats.homeBothTeamsToScoreYesPercentage ? item.data.bothTeamsToScoreStats.homeBothTeamsToScoreYesPercentage + '%' : 'Veri yok' }}</span>
                   </div>
-                  <UMeter
-                    :value="item.data.bothTeamsToScoreStats.homeBothTeamsToScoreYesPercentage"
-                    color="green"
+                  <UProgress
+                    v-if="item.data.bothTeamsToScoreStats.homeBothTeamsToScoreYesPercentage"
+                    :model-value="parseFloat(String(item.data.bothTeamsToScoreStats.homeBothTeamsToScoreYesPercentage)) || 0"
+                    color="success"
                   />
+                  <div
+                    v-else
+                    class="text-gray-500 text-sm italic"
+                  >
+                    Veri yok
+                  </div>
                 </div>
                 <div>
                   <div class="flex justify-between text-sm mb-1">
                     <span>{{ item.data.bothTeamsToScoreStats.betTypeNoTitle }} (Ev)</span>
-                    <span class="font-bold">{{ item.data.bothTeamsToScoreStats.homeBothTeamsToScoreNoPercentage }}%</span>
+                    <span class="font-bold">{{ item.data.bothTeamsToScoreStats.homeBothTeamsToScoreNoPercentage ? item.data.bothTeamsToScoreStats.homeBothTeamsToScoreNoPercentage + '%' : 'Veri yok' }}</span>
                   </div>
-                  <UMeter
-                    :value="item.data.bothTeamsToScoreStats.homeBothTeamsToScoreNoPercentage"
-                    color="red"
+                  <UProgress
+                    v-if="item.data.bothTeamsToScoreStats.homeBothTeamsToScoreNoPercentage"
+                    :model-value="parseFloat(String(item.data.bothTeamsToScoreStats.homeBothTeamsToScoreNoPercentage)) || 0"
+                    color="error"
                   />
+                  <div
+                    v-else
+                    class="text-gray-500 text-sm italic"
+                  >
+                    Veri yok
+                  </div>
                 </div>
               </div>
+            </div>
+            <div
+              v-else
+              class="text-gray-500 text-sm italic"
+            >
+              Karışık gol istatistikleri için veri yok
             </div>
 
             <!-- Total Goals -->
@@ -166,10 +213,10 @@
                     0-1 Gol
                   </div>
                   <div class="font-bold text-lg">
-                    {{ item.data.totalGoalStats.homeTotalGoal0_1 }}
+                    {{ item.data.totalGoalStats.homeTotalGoal0_1 || 'Veri yok' }}
                   </div>
                   <div class="text-gray-400">
-                    %{{ item.data.totalGoalStats.homeTotalGoal0_1Percentage }}
+                    {{ item.data.totalGoalStats.homeTotalGoal0_1Percentage ? '%' + item.data.totalGoalStats.homeTotalGoal0_1Percentage : 'Veri yok' }}
                   </div>
                 </div>
                 <div class="bg-gray-50 dark:bg-gray-800 p-2 rounded">
@@ -177,10 +224,10 @@
                     2-3 Gol
                   </div>
                   <div class="font-bold text-lg">
-                    {{ item.data.totalGoalStats.homeTotalGoal2_3 }}
+                    {{ item.data.totalGoalStats.homeTotalGoal2_3 || 'Veri yok' }}
                   </div>
                   <div class="text-gray-400">
-                    %{{ item.data.totalGoalStats.homeTotalGoal2_3Percentage }}
+                    {{ item.data.totalGoalStats.homeTotalGoal2_3Percentage ? '%' + item.data.totalGoalStats.homeTotalGoal2_3Percentage : 'Veri yok' }}
                   </div>
                 </div>
                 <div class="bg-gray-50 dark:bg-gray-800 p-2 rounded">
@@ -188,10 +235,10 @@
                     4-6 Gol
                   </div>
                   <div class="font-bold text-lg">
-                    {{ item.data.totalGoalStats.homeTotalGoal4_6 }}
+                    {{ item.data.totalGoalStats.homeTotalGoal4_6 || 'Veri yok' }}
                   </div>
                   <div class="text-gray-400">
-                    %{{ item.data.totalGoalStats.homeTotalGoal4_6Percentage }}
+                    {{ item.data.totalGoalStats.homeTotalGoal4_6Percentage ? '%' + item.data.totalGoalStats.homeTotalGoal4_6Percentage : 'Veri yok' }}
                   </div>
                 </div>
                 <div class="bg-gray-50 dark:bg-gray-800 p-2 rounded">
@@ -199,13 +246,19 @@
                     7+ Gol
                   </div>
                   <div class="font-bold text-lg">
-                    {{ item.data.totalGoalStats.homeTotalGoal7P }}
+                    {{ item.data.totalGoalStats.homeTotalGoal7P || 'Veri yok' }}
                   </div>
                   <div class="text-gray-400">
-                    %{{ item.data.totalGoalStats.homeTotalGoal7PPercentage }}
+                    {{ item.data.totalGoalStats.homeTotalGoal7PPercentage ? '%' + item.data.totalGoalStats.homeTotalGoal7PPercentage : 'Veri yok' }}
                   </div>
                 </div>
               </div>
+            </div>
+            <div
+              v-else
+              class="text-gray-500 text-sm italic"
+            >
+              Toplam gol istatistikleri için veri yok
             </div>
 
             <!-- Under/Over 2.5 -->
@@ -220,24 +273,44 @@
                 <div>
                   <div class="flex justify-between text-sm mb-1">
                     <span>{{ item.data.underOverStats.betTypeOverTitle }} (Ev)</span>
-                    <span class="font-bold">%{{ item.data.underOverStats.home25OverPercentage }}</span>
+                    <span class="font-bold">{{ item.data.underOverStats.home25OverPercentage ? '%' + item.data.underOverStats.home25OverPercentage : 'Veri yok' }}</span>
                   </div>
-                  <UMeter
-                    :value="item.data.underOverStats.home25OverPercentage"
-                    color="orange"
+                  <UProgress
+                    v-if="item.data.underOverStats.home25OverPercentage"
+                    :model-value="parseFloat(String(item.data.underOverStats.home25OverPercentage)) || 0"
+                    color="warning"
                   />
+                  <div
+                    v-else
+                    class="text-gray-500 text-sm italic"
+                  >
+                    Veri yok
+                  </div>
                 </div>
                 <div>
                   <div class="flex justify-between text-sm mb-1">
                     <span>{{ item.data.underOverStats.betTypeUnderTitle }} (Ev)</span>
-                    <span class="font-bold">%{{ item.data.underOverStats.home25UnderPercentage }}</span>
+                    <span class="font-bold">{{ item.data.underOverStats.home25UnderPercentage ? '%' + item.data.underOverStats.home25UnderPercentage : 'Veri yok' }}</span>
                   </div>
-                  <UMeter
-                    :value="item.data.underOverStats.home25UnderPercentage"
-                    color="teal"
+                  <UProgress
+                    v-if="item.data.underOverStats.home25UnderPercentage"
+                    :model-value="parseFloat(String(item.data.underOverStats.home25UnderPercentage)) || 0"
+                    color="secondary"
                   />
+                  <div
+                    v-else
+                    class="text-gray-500 text-sm italic"
+                  >
+                    Veri yok
+                  </div>
                 </div>
               </div>
+            </div>
+            <div
+              v-else
+              class="text-gray-500 text-sm italic"
+            >
+              Alt/üst istatistikleri için veri yok
             </div>
           </div>
         </template>

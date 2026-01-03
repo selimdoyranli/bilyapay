@@ -1,16 +1,11 @@
 <template>
   <div class="space-y-4">
-    <div
-      v-if="completion"
-      class="border-b border-gray-200 dark:border-gray-700 pb-8 mb-8"
-    >
-      <h4 class="font-bold mb-4">
-        Analiz Sonucu:
-      </h4>
-      <div class="prose dark:prose-invert max-w-none">
-        <MDC :value="completion" />
-      </div>
-    </div>
+    <h5 class="font-bold mt-4 mb-2">
+      Sistem girdisi
+    </h5>
+    <small class="text-gray-500 dark:text-gray-400 mb-4 block">
+      Bilyoner verileri otomatik olarak sistem girdisine iliştirilir.
+    </small>
 
     <UChatPrompt
       v-model="systemPrompt"
@@ -39,13 +34,29 @@
             />
           </div>
 
-          <UChatPromptSubmit
+          <UButton
             :loading="isLoading"
-            size="xs"
-          />
+            size="md"
+            icon="i-heroicons-sparkles"
+            @click="handleAnalyze"
+          >
+            Analiz et
+          </UButton>
         </div>
       </template>
     </UChatPrompt>
+
+    <div
+      v-if="completion"
+      class="border-b border-gray-200 dark:border-gray-700 pb-8 mb-8"
+    >
+      <h4 class="font-bold mb-4">
+        Analiz Sonucu:
+      </h4>
+      <div class="prose dark:prose-invert max-w-none">
+        <MDC :value="completion" />
+      </div>
+    </div>
   </div>
 </template>
 

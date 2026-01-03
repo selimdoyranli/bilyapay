@@ -1,14 +1,6 @@
 <template>
-  <div class="grid place-items-center h-[calc(100vh-var(--ui-footer-height))] pt-12 pb-12">
-    <UContainer>
-      <LogoAppLogo class="w-auto shrink-0 mb-5 block" />
-
-      <h2
-        class="font-normal text-2xl block mb-12"
-      >
-        Bilyoner verileri ile yapay zeka futbol maçı tahmini
-      </h2>
-
+  <div class="grid place-items-center h-[calc(100vh-var(--ui-footer-height))]">
+    <UContainer class="pt-12 pb-[20vh]">
       <FormPredictForm @on-submit="handlePredictFormSubmit" />
 
       <UTabs

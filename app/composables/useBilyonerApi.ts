@@ -15,5 +15,9 @@ export const useBilyonerApi = () => {
     return await $fetch(`/api/bilyoner/match-comments?matchId=${matchId}`)
   }
 
-  return { fetchMatchDetails, fetchMatchStatistics, fetchMissingPlayersOfMatch, fetchMatchComments }
+  const fetchTrendMatches = async () => {
+    return await $fetch(`/api/bilyoner/trending-matches`)
+  }
+
+  return { fetchMatchDetails, fetchMatchStatistics, fetchMissingPlayersOfMatch, fetchMatchComments, fetchTrendMatches }
 }

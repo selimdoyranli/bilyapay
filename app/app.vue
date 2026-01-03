@@ -23,6 +23,13 @@ useSeoMeta({
   twitterImage: 'https://ui.nuxt.com/assets/templates/nuxt/starter-light.png',
   twitterCard: 'summary_large_image'
 })
+
+// Credits modal state
+const isCreditsModalOpen = ref(false)
+
+const openCreditsModal = () => {
+  isCreditsModalOpen.value = true
+}
 </script>
 
 <template>
@@ -31,10 +38,16 @@ useSeoMeta({
       <NuxtPage />
     </UMain>
 
-    <UFooter class="h-[50px] fixed bottom-0 left-0 right-0 flex items-center">
+    <UFooter class="h-[50px] fixed bottom-0 left-0 right-0 flex items-center bg-neutral-900">
       <template #left>
         <p class="text-sm text-muted">
-          Created by @selimdoyranli
+          Created by
+          <button
+            class="text-blue-400 hover:text-blue-300 underline cursor-pointer transition-colors"
+            @click="openCreditsModal"
+          >
+            @selimdoyranli
+          </button>
         </p>
       </template>
 
@@ -49,5 +62,8 @@ useSeoMeta({
         />
       </template>
     </UFooter>
+
+    <!-- Credits Modal -->
+    <CreditsModal v-model="isCreditsModalOpen" />
   </UApp>
 </template>
