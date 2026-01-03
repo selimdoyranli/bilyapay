@@ -57,7 +57,7 @@
       <h4 class="font-bold mb-4">
         Analiz Sonucu:
       </h4>
-      <div class="prose dark:prose-invert max-w-none break-words overflow-hidden">
+      <div class="prose dark:prose-invert max-w-none wrap-break-words overflow-hidden">
         <MDC :value="completion" />
       </div>
     </div>

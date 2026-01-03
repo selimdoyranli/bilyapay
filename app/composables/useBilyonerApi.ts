@@ -5,16 +5,18 @@ import type {
   MatchCommentsData
 } from '~/types/bilyoner'
 
-export interface TrendingMatch {
-  id: number
-  homeTeamName: string
-  awayTeamName: string
-  matchDate: string
-  tournamentName: string
+export interface TrendingMatchMarket {
+  mrn: string
+  n: string
+  val: number
 }
 
-export interface TrendingMatchesResponse {
-  data: TrendingMatch[]
+export interface TrendingMatch {
+  id: number
+  en: string
+  lgn: string
+  strt: string
+  market?: TrendingMatchMarket
 }
 
 export const useBilyonerApi = () => {
@@ -34,8 +36,8 @@ export const useBilyonerApi = () => {
     return await $fetch<MatchCommentsData>(`/api/bilyoner/match-comments?matchId=${matchId}`)
   }
 
-  const fetchTrendMatches = async (): Promise<TrendingMatchesResponse> => {
-    return await $fetch<TrendingMatchesResponse>(`/api/bilyoner/trending-matches`)
+  const fetchTrendMatches = async (): Promise<TrendingMatch[]> => {
+    return await $fetch<TrendingMatch[]>(`/api/bilyoner/trending-matches`)
   }
 
   return {

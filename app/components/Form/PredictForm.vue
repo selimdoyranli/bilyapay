@@ -63,17 +63,7 @@
 </template>
 
 <script setup lang="ts">
-interface TrendingMatch {
-  id: number
-  en: string
-  lgn: string
-  strt: string
-  market?: {
-    mrn: string
-    n: string
-    val: number
-  }
-}
+import type { TrendingMatch } from '~/composables/useBilyonerApi'
 
 const state = reactive({ bilyonerMatchLink: '' })
 
@@ -81,12 +71,16 @@ const emit = defineEmits(['on-submit'])
 
 const { fetchTrendMatches } = useBilyonerApi()
 
-const { execute: executeTrendMatches, data: trendingMatches, pending, error } = await useAsyncData<TrendingMatch[]>('trending-matches', () => fetchTrendMatches() as Promise<TrendingMatch[]>, {
-  immediate: false,
-  default: () => []
-})
+const { execute: executeTrendMatches, data: trendingMatches, pending, error } = await useAsyncData<TrendingMatch[]>(
+  'trending-matches',
+  () => fetchTrendMatches(),
+  {
+    immediate: false,
+    default: () => []
+  }
+)
 
-const trendingMatchesList = computed(() => (trendingMatches.value ?? []) as TrendingMatch[])
+const trendingMatchesList = computed<TrendingMatch[]>(() => trendingMatches.value ?? [])
 
 onMounted(() => {
   executeTrendMatches()

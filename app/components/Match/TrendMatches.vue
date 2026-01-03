@@ -57,17 +57,7 @@
 </template>
 
 <script setup lang="ts">
-interface TrendingMatch {
-  id: number
-  en: string
-  lgn: string
-  strt: string
-  market?: {
-    mrn: string
-    n: string
-    val: number
-  }
-}
+import type { TrendingMatch } from '~/composables/useBilyonerApi'
 
 defineProps<{
   matches: TrendingMatch[]
