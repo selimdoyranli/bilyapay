@@ -66,7 +66,8 @@ const emit = defineEmits(['on-submit'])
 
 const { fetchTrendMatches } = useBilyonerApi()
 
-const { data, pending } = await useAsyncData('trending-matches', () => fetchTrendMatches())
+const { data, pending } = await useAsyncData('trending-matches', () => fetchTrendMatches(), { lazy: true })
+console.log(data)
 
 const trendingMatches = computed(() => {
   const response = data.value as { data: TrendingMatch[] } | null
