@@ -2,7 +2,7 @@ import { bilyonerHeaders } from '../global/headers'
 
 export default defineEventHandler((_event) => {
   const fetchTrendMatches = () => {
-    const response = fetch(`https://www.bilyoner.com/api/v3/mobile/aggregator/gamelist/events/selections/trending?bulletinType=2`, {
+    const response = fetch(`${process.env.API_URL || 'http://localhost:3000/api/bilyoner'}/trending-matches`, {
       headers: bilyonerHeaders
     })
 
