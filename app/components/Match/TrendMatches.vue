@@ -52,7 +52,7 @@
     v-else
     class="text-center text-gray-500 mt-4"
   >
-    Trend maçlar bulunamadı.
+    Trend maçlar getiriliyor...
   </div>
 </template>
 

@@ -13,12 +13,37 @@ export default defineEventHandler(async (event) => {
     return ''
   }
 
-  const response = await fetch(
-    process.env.API_URL ? `${process.env.API_URL}/trending-matches` : getTrendingMatchesUrl(),
-    { headers: bilyonerHeaders }
-  )
+  if (process.env.API_URL) {
+    const targetUrl = `${process.env.API_URL}/trending-matches`
 
-  const data = await response.json()
+    const response = await fetch(`${process.env.PROXY_URL}`, {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json, text/plain, */*',
+        'content-type': 'application/json',
+        'origin': `${process.env.PROXY_ORIGIN_URL}`,
+        'referer': `${process.env.PROXY_ORIGIN_URL}`
+      },
+      body: JSON.stringify({
+        accessToken: '',
+        wantsBinary: true,
+        url: targetUrl,
+        method: 'GET',
+        headers: bilyonerHeaders,
+        params: {},
+        data: null
+      })
+    })
 
-  return data.data ? data.data : []
+    const data = await response.json()
+
+    return data.data ? JSON.parse(atob(data.data)) : []
+  } else {
+    const targetUrl = getTrendingMatchesUrl()
+    const response = await fetch(targetUrl, {
+      headers: bilyonerHeaders
+    })
+    const data = await response.json()
+    return data.data ? data.data : []
+  }
 })

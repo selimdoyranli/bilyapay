@@ -1,22 +1,50 @@
-import { parseURL, parseQuery } from 'ufo'
 import { bilyonerHeaders } from '../global/headers'
 import { getMatchDetailUrl } from '../../utils/bilyoner-urls'
 
-export default defineEventHandler((event) => {
-  const url = parseURL(event.node.req.url)
-  const query = parseQuery(url.search)
+export default defineEventHandler(async (event) => {
+  setResponseHeaders(event, {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
+  })
 
-  const matchId = Number(query.matchId)
-
-  const fetchMatchDetails = (matchId: number) => {
-    const response = fetch(process.env.API_URL ? `${process.env.API_URL}/match-detail?matchId=${matchId}` : getMatchDetailUrl(matchId), {
-      headers: bilyonerHeaders
-    })
-
-    return response
+  if (event.method === 'OPTIONS') {
+    event.node.res.statusCode = 204
+    return ''
   }
 
-  const result = fetchMatchDetails(matchId).then(response => response.json())
+  const query = getQuery(event)
+  const matchId = Number(query.matchId)
 
-  return result
+  if (process.env.API_URL) {
+    const targetUrl = `${process.env.API_URL}/match-detail?matchId=${matchId}`
+
+    const response = await fetch(`${process.env.PROXY_URL}`, {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json, text/plain, */*',
+        'content-type': 'application/json',
+        'origin': `${process.env.PROXY_ORIGIN_URL}`,
+        'referer': `${process.env.PROXY_ORIGIN_URL}`
+      },
+      body: JSON.stringify({
+        accessToken: '',
+        wantsBinary: true,
+        url: targetUrl,
+        method: 'GET',
+        headers: bilyonerHeaders,
+        params: {},
+        data: null
+      })
+    })
+
+    const data = await response.json()
+    return data.data ? JSON.parse(atob(data.data)) : []
+  } else {
+    const targetUrl = getMatchDetailUrl(matchId)
+    const response = await fetch(targetUrl, {
+      headers: bilyonerHeaders
+    })
+    return await response.json()
+  }
 })
