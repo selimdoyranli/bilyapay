@@ -39,7 +39,7 @@ export default defineEventHandler(async (event) => {
     })
 
     const data = await response.json()
-    return data.data ? JSON.parse(atob(data.data)) : []
+    return data.data ? JSON.parse(Buffer.from(data.data, 'base64').toString('utf-8')) : []
   } else {
     const targetUrl = getMatchMissingPlayersUrl(matchId)
     const response = await fetch(targetUrl, {
