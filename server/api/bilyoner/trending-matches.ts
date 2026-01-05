@@ -1,22 +1,24 @@
 import { bilyonerHeaders } from '../global/headers'
 import { getTrendingMatchesUrl } from '../../utils/bilyoner-urls'
 
-export default defineEventHandler((_event) => {
-  const fetchTrendMatches = () => {
-    const response = fetch(process.env.API_URL ? `${process.env.API_URL}/trending-matches` : getTrendingMatchesUrl(), {
-      headers: bilyonerHeaders
-    })
-
-    return response
-  }
-
-  const result = fetchTrendMatches().then(response => response.json()).then((data) => {
-    if (data.data) {
-      return data.data
-    }
-
-    return []
+export default defineEventHandler(async (event) => {
+  setResponseHeaders(event, {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
   })
 
-  return result
+  if (event.method === 'OPTIONS') {
+    event.node.res.statusCode = 204
+    return ''
+  }
+
+  const response = await fetch(
+    process.env.API_URL ? `${process.env.API_URL}/trending-matches` : getTrendingMatchesUrl(),
+    { headers: bilyonerHeaders }
+  )
+
+  const data = await response.json()
+
+  return data.data ? data.data : []
 })
