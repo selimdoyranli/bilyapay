@@ -6,6 +6,10 @@
 
 Bilyapay, Bilyoner verilerini kullanarak yapay zeka destekli futbol maçı tahminleri yapan modern bir web uygulamasıdır. Google Generative AI (Gemini) ile gelişmiş analizler sunar.
 
+![Bilyapay](./public/meta/images/bypss1.jpeg)
+![Bilyapay](./public/meta/images/bypss2.jpeg)
+![Bilyapay](./public/meta/images/bypss3.jpeg)
+
 ## ✨ Özellikler
 
 - 🔍 **Gerçek Zamanlı Veri**: Bilyoner API'si üzerinden güncel maç verileri
